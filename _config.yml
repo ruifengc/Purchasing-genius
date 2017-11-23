@@ -1,5 +1,4 @@
 theme: jekyll-theme-cayman
 title: Purchasing-genius
-description: 这是我结合python**爬虫**学习与软件需求工程作业的试验品,
-             使用了**wx.py**连接微信端
-             使用**Mongodb**存储数据
+description: 这是我结合python爬虫学习与软件需求工程作业的试验品
+       
