@@ -1,20 +1,24 @@
-import urllib.request
-import urllib.parse
 import json
-def trans(content):
-    head = {'User-Agent':'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36'}
-    url = "http://fanyi.youdao.com/translate?smartresult=dict&smartresult=rule&smartresult=ugc&sessionFrom=http://www.youdao.com/"
-    data = {}
-    data['type'] = 'AUTO'
-    data['i'] = content
-    data['doctype'] = 'json'
-    data['xmlVersion'] = '1.8'
-    data['keyfrom'] = 'fanyi.web'
-    data['ue'] = 'UTF-8'
-    data['typoResult'] = 'true'
-    data = urllib.parse.urlencode(data).encode('utf-8')
-    req = urllib.request.Request(url,data,head)
-    response = urllib.request.urlopen(req)
-    html = response.read().decode('utf-8')
-    target = json.loads(html)
-    return "翻译结果：%s" % (target['translateResult'][0][0]['tgt'])
+import requests
+import random
+import hashlib
+
+#从百度申请
+appid = '----------'
+secretKey = '------------'
+
+def trans(conent):
+    url = "http://api.fanyi.baidu.com/api/trans/vip/translate"
+    salt = random.randint(32768,65536)
+    sign = appid + conent +str(salt)+secretKey
+    sign = sign.encode("UTF-8")
+    m = hashlib.md5()
+    m.update(sign)
+    md5value = m.hexdigest()
+    myurl = url +'?appid='+appid+'&q='+conent+'&from='+"auto"+'&to='+"zh"+'&salt='+str(salt)+'&sign='+md5value
+    data = requests.get(myurl)
+    target2 = json.loads(data.text)
+    src = target2["trans_result"][0]["dst"]
+    return src
+if __name__ == '__main__':
+    trans("hello world")
