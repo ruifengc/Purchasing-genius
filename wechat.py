@@ -12,7 +12,7 @@ import natural_language_processing
 def echo(msg):
     instruction = msg.text.split(" ")[0]
     if instruction == "翻译":
-        back = translation.trans(msg.text.split(" ")[-1])
+        back = translation.trans(msg.text.split(" ",1)[-1])
     elif instruction == "价格":
         back = taobaosp.get_info(msg.text.split(" ")[-1])
     elif instruction == "公告":
@@ -21,19 +21,22 @@ def echo(msg):
         else:
             back = DB.search_announcement_info()
     elif instruction == "发布公告":
-        DB.insert_announcement_info(msg.text.split(" ")[-1])
+        DB.insert_announcement_info(msg.text.split(" ",1)[-1])
         back = "已经成功发布"
     else:
-        NLPlist = natural_language_processing.NLP(msg.text)
-        if NLPlist[1] == "采购单":
-            back = DB.search_purchase_order(NLPlist[0])
-        elif NLPlist[1] == "新增采购":
-             DB.insert_purchase_order(NLPlist[0], NLPlist[2], NLPlist[3])
-             back = "采购添加已经成功"
-        elif NLPlist[1] == "采购提交":
-             back = DB.update_purchase_order(NLPlist[0],NLPlist[2])
-        else:
-             back = tulingback(msg.text)
+        try:
+            NLPlist = natural_language_processing.NLP(msg.text)
+            if NLPlist[1] == "采购单":
+                back = DB.search_purchase_order(NLPlist[0])
+            elif NLPlist[1] == "新增采购":
+                 DB.insert_purchase_order(NLPlist[0], NLPlist[2], NLPlist[3])
+                 back = "采购添加已经成功"
+            elif NLPlist[1] == "采购提交":
+                 back = DB.update_purchase_order(NLPlist[0],NLPlist[2])
+            else:
+                 back = tulingback(msg.text)
+        except:
+            back = tulingback(msg,text)
     print("in:"+msg.text)
     print("out:"+back)
     return back
