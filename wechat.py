@@ -47,7 +47,7 @@ def getres(intext):
     soup = BeautifulSoup(wb_data.text,"lxml")
     return soup.select("body")[0].text
 def tulingback(intext):
-    key = "971309069ab84ae1b7fa8dba5836658c"
+    key = "****************"
     data = {"key": key, "info":intext, "userid": "123"}
     wb_data = requests.post("http://www.tuling123.com/openapi/api", data=data)
     text = json.loads(wb_data.text)
